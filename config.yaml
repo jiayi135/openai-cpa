@@ -1,0 +1,108 @@
+# [邮箱 API 模式选择]
+# 可选值: "imap" / "freemail" / "cloudflare_temp_email"
+email_api_mode: "cloudflare_temp_email"
+
+# [基础配置: cloudflare_temp_email / imap 共享]
+# 你的域名 (支持逗号分隔多域名随机轮换) 如果只有一个域名就只填一个域名
+mail_domains: "domain1.com,domain2.xyz,domain3.net"
+# 你的临时邮箱 后端API 基础地址 结尾不要/，IMAP和freemail不需要配置此项。注意：用浏览器打开后端api验证是否可访问
+gptmail_base: "https://your-domain.com"
+
+# [代理配置]
+# openai注册时代理地址，例子：http://127.0.0.1:7897。如果是国外服务器此项可以不填
+default_proxy: ""
+
+
+# Clash 节点智能轮换（本地使用clash软件）
+clash_proxy_pool:
+  # 【开关】是否在每次注册前自动通过 Clash 切换节点
+  enable: false
+  # Clash 的外部控制 API 地址 (注意端口通常是 9090 或 9097)
+  api_url: "http://127.0.0.1:9097"
+  # 你机场包含所有节点的策略组名称，带有 Emoji 也没关系
+  group_name: "节点选择"
+  # Clash 的外部控制鉴权秘钥 (Secret)
+  secret: "set-your-secret"
+  # 用于连接外网测活的本地代理端口 (通常与上方的 default_proxy 保持一致)
+  test_proxy_url: ""
+  # 节点过滤黑名单：严格剔除包含以下关键词的节点 (如港台地区、说明性节点)
+  blacklist:
+    - "自动"
+    - "故障"
+    - "剩余"
+    - "到期"
+    - "官网"
+    - "Traffic"
+    - "DIRECT"
+    - "REJECT"
+    - "港"
+    - "HK"
+    - "Hongkong"
+    - "台"
+    - "TW"
+    - "Taiwan"
+    - "中"
+    - "CN"
+    - "China"
+    - "回国"
+
+# [模式 "imap" 专属配置] (CF Catch-all 转发接收端)
+imap:
+  # 默认为gmail IMAP 服务器地址,QQ为imap.qq.com。不建议用QQ
+  server: "imap.gmail.com"
+  # IMAP 端口
+  port: 993
+  # 接收转发的真实邮箱账号
+  user: ""
+  # 16位应用专用密码，谷歌邮箱要去https://myaccount.google.com/apppasswords这里创建专属应用密码
+  pass: ""
+
+# [模式 "freemail" 专属]
+freemail:
+  api_url: "https://your-domain.com"
+  api_token: ""
+
+# [模式 "cloudflare_temp_email" 专属配置]
+# 你的临时邮箱管理员密码
+admin_auth: ""
+
+
+# [验证码重发次数配置，默认5次]
+max_otp_retries: 5
+
+# [邮箱代理专项配置]
+# 【开关】true 表示获取邮箱（谷歌）也用代理，false 表示直连（推荐先试 false）如果是国外服务器此项可以保持false
+use_proxy_for_email: false
+# 【开关】true 表示在控制台日志中隐藏邮箱域名，false 表示显示完整邮箱
+enable_email_masking: true
+
+# [Token 存放目录]
+# 默认存放跟脚本一个目录
+token_output_dir: ""
+
+# CPA 模式专属配置
+cpa_mode:
+  # 【开关】true 开启巡检补货上传，false 则只进行常规无限注册
+  enable: false
+  # 【开关】开启 CPA 补货时，是否同时将账号 Token 备份到本地，默认true为备份
+  save_to_local: true
+  # CPA的api地址
+  api_url: "http://your-domain.com:8317"
+  # CPA登陆密码
+  api_token: "xxxx"
+  # 仓库存量低于此值时触发补货
+  min_accounts_threshold: 30
+  # 每次触发补货注册的数量
+  batch_reg_count: 1
+  # 周限额剔除阈值设置 (0-100)
+  # 设为 80 代表额度剩余低于 80% 就当作死号剔除，设为 0 代表完全耗尽才剔除。
+  min_remaining_weekly_percent: 80
+  # CPA 仓库巡检的间隔时间，默认每60分钟巡检一次
+  check_interval_minutes: 60
+
+# 常规量产模式专属配置
+normal_mode:
+  # 每次循环注册成功或失败后，最短等待时间 (秒)
+  sleep_min: 5
+  # 每次循环注册成功或失败后，最长等待时间 (秒)
+  sleep_max: 30
